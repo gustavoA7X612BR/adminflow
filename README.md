@@ -2,6 +2,8 @@
 
 Painel administrativo feito com SvelteKit e Svelte 5, com componentes documentados em TSDoc e cobertura por testes unitários, testes de componentes e testes E2E. O app apresenta indicadores gerais, permite consultar usuários e publicações, pesquisar publicações e abrir a página de detalhes com seus comentários.
 
+Acesse aqui a aplicação rodando em ambiente de produção: [https://adminflow-red.vercel.app/](https://adminflow-red.vercel.app/)
+
 ## Requisitos
 
 - Node.js 22.12 ou superior.
