@@ -1,27 +1,37 @@
 <script lang="ts">
-	let {
-		columns,
-		rows,
-		empty = 'Nenhum resultado encontrado.',
-		rowHref
-	}: {
+	import { resolve } from '$app/paths';
+	import type { PathnameWithSearchOrHash } from '$app/types';
+
+	/** Propriedades aceitas por {@link DataTable}. */
+	interface Props {
+		/** Títulos das colunas, na mesma ordem das células de cada linha. */
 		columns: string[];
+		/** Dados da tabela. Cada linha deve conter uma célula para cada coluna. */
 		rows: (string | number)[][];
+		/** Mensagem exibida em uma célula expandida quando {@link rows} estiver vazio. */
 		empty?: string;
+		/**
+		 * Função opcional que retorna o destino do link. Quando fornecida, a
+		 * primeira célula de cada linha vira um link. Recebe o índice da linha,
+		 * começando em zero.
+		 */
 		rowHref?: (index: number) => string;
-	} = $props();
+	}
+
+	let { columns, rows, empty = 'Nenhum resultado encontrado.', rowHref }: Props = $props();
 </script>
 
 <div class="table-wrap">
 	<table>
 		<thead
 			><tr
-				>{#each columns as column}<th>{column}</th>{/each}</tr
+				>{#each columns as column, index (index)}<th>{column}</th>{/each}</tr
 			></thead
 		><tbody
-			>{#if rows.length}{#each rows as row, index}<tr
-						>{#each row as cell}<td
-								>{#if rowHref && index === 0}<a href={rowHref(index)}>{cell}</a
+			>{#if rows.length}{#each rows as row, index (index)}<tr
+						>{#each row as cell, cellIndex (cellIndex)}<td
+								>{#if rowHref && cellIndex === 0}<a
+										href={resolve(rowHref(index) as PathnameWithSearchOrHash)}>{cell}</a
 									>{:else}{cell}{/if}</td
 							>{/each}</tr
 					>{/each}{:else}<tr><td class="empty" colspan={columns.length}>{empty}</td></tr

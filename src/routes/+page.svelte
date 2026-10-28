@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 	import StatCard from '$lib/components/StatCard.svelte';
+	import PageHeader from '$lib/components/PageHeader.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -13,18 +15,18 @@
 </svelte:head>
 
 <main class="dashboard">
-	<header class="page-header">
-		<div>
-			<p class="eyebrow">VISÃO GERAL</p>
-			<h1>Dashboard</h1>
-			<p class="subtitle">Acompanhe os dados e as publicações da plataforma.</p>
-		</div>
-
-		<span class="live-indicator">
-			<span class="status-dot"></span>
-			Dados da API
-		</span>
-	</header>
+	<PageHeader
+		eyebrow="VISÃO GERAL"
+		title="Dashboard"
+		subtitle="Acompanhe os dados e as publicações da plataforma."
+	>
+		{#snippet actions()}
+			<span class="live-indicator">
+				<span class="status-dot"></span>
+				Dados da API
+			</span>
+		{/snippet}
+	</PageHeader>
 
 	<section class="stats-grid" aria-label="Indicadores gerais">
 		<StatCard
@@ -60,7 +62,7 @@
 				<p class="section-description">Últimas cinco publicações por identificador.</p>
 			</div>
 
-			<a href="/posts" class="view-all">
+			<a href={resolve('/posts')} class="view-all">
 				Ver todas <span aria-hidden="true">→</span>
 			</a>
 		</header>
@@ -72,13 +74,17 @@
 
 					<div class="post-info">
 						<h3>
-							<a href={`/posts/${post.id}`}>{post.title}</a>
+							<a href={resolve('/posts/[id]', { id: String(post.id) })}>{post.title}</a>
 						</h3>
 						<p>{post.body}</p>
 						<span class="post-author">Usuário #{post.userId}</span>
 					</div>
 
-					<a href={`/posts/${post.id}`} class="post-link" aria-label={`Ver publicação ${post.id}`}>
+					<a
+						href={resolve('/posts/[id]', { id: String(post.id) })}
+						class="post-link"
+						aria-label={`Ver publicação ${post.id}`}
+					>
 						→
 					</a>
 				</article>
@@ -95,7 +101,7 @@
 		</header>
 
 		<div class="quick-grid">
-			<a href="/users" class="quick-card">
+			<a href={resolve('/users')} class="quick-card">
 				<span class="quick-icon users-icon" aria-hidden="true">♙</span>
 				<span>
 					<strong>Usuários</strong>
@@ -104,7 +110,7 @@
 				<span class="quick-arrow" aria-hidden="true">→</span>
 			</a>
 
-			<a href="/posts" class="quick-card">
+			<a href={resolve('/posts')} class="quick-card">
 				<span class="quick-icon posts-icon" aria-hidden="true">▤</span>
 				<span>
 					<strong>Publicações</strong>
@@ -127,13 +133,6 @@
 		color: var(--text-primary, #172033);
 	}
 
-	.page-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 20px;
-	}
-
 	.eyebrow {
 		margin: 0 0 8px;
 		color: var(--text-muted, #737b8c);
@@ -142,13 +141,6 @@
 		letter-spacing: 0.1em;
 	}
 
-	h1 {
-		margin: 0;
-		font-size: clamp(1.8rem, 4vw, 2.2rem);
-		letter-spacing: -0.04em;
-	}
-
-	.subtitle,
 	.section-description {
 		margin: 8px 0 0;
 		color: var(--text-muted, #737b8c);
@@ -367,10 +359,6 @@
 		.dashboard {
 			gap: 26px;
 			padding: 22px 16px;
-		}
-
-		.page-header {
-			align-items: flex-start;
 		}
 
 		.live-indicator {

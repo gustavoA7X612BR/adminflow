@@ -1,9 +1,15 @@
 <script lang="ts">
+	/** Propriedades aceitas por {@link StatCard}. */
 	interface Props {
+		/** Nome da métrica exibida no cartão. */
 		label: string;
+		/** Valor formatado da métrica. */
 		value: string | number;
+		/** Texto de apoio exibido abaixo da métrica. */
 		description: string;
+		/** Símbolo exibido no selo colorido do ícone. */
 		icon: string;
+		/** Variação de cor do selo do ícone. O padrão é `users`. */
 		variant?: 'users' | 'posts' | 'average';
 	}
 

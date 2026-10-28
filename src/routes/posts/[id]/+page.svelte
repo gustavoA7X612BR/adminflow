@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -19,7 +20,7 @@
 </svelte:head>
 
 <main class="post-detail">
-	<a href="/posts" class="back-link">← Voltar para publicações</a>
+	<a href={resolve('/posts')} class="back-link">← Voltar para publicações</a>
 
 	<article class="post-card">
 		<div class="post-meta">

@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
 	import SearchInput from '$lib/components/SearchInput.svelte';
 	import DataTable from '$lib/components/DataTable.svelte';
+	import PageHeader from '$lib/components/PageHeader.svelte';
 
 	let { data }: PageProps = $props();
 	let search = $state('');
@@ -26,8 +27,10 @@
 </svelte:head>
 
 <main>
-	<h1>Usuários</h1>
-	<p>{filteredUsers.length} de {data.users.length} usuários</p>
+	<PageHeader
+		title="Usuários"
+		subtitle={`${filteredUsers.length} de ${data.users.length} usuários`}
+	/>
 
 	<div class="toolbar">
 		<SearchInput

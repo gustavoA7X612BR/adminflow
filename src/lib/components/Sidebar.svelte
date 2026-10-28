@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { BarChart3, FileText, LayoutDashboard, Settings, Users, X } from 'lucide-svelte';
-	let { open = $bindable(false) }: { open?: boolean } = $props();
-	const links = [
-		{ label: 'Visão geral', href: '/', icon: LayoutDashboard },
-		{ label: 'Usuários', href: '/users', icon: Users },
-		{ label: 'Publicações', href: '/posts', icon: FileText }
-	];
+	import { resolve } from '$app/paths';
+	import { BarChart3, FileText, LayoutDashboard, Users, X } from 'lucide-svelte';
+	/** Propriedades aceitas por {@link Sidebar}. */
+	interface Props {
+		/**
+		 * Controla o menu de navegação em telas pequenas. Use binding para que o
+		 * layout pai possa abrir ou fechar o menu.
+		 */
+		open?: boolean;
+	}
+
+	let { open = $bindable(false) }: Props = $props();
 </script>
 
 {#if open}<button class="scrim" aria-label="Fechar menu" onclick={() => (open = false)}
@@ -22,13 +27,23 @@
 
 	<p class="nav-label">MENU PRINCIPAL</p>
 	<nav>
-		{#each links as item}<a
-				href={item.href}
-				class:active={page.url.pathname === item.href ||
-					(item.href !== '/' && page.url.pathname.startsWith(item.href))}
-				onclick={() => (open = false)}
-				><item.icon size={18} strokeWidth={1.8} /><span>{item.label} </span>
-			</a>{/each}
+		<a href={resolve('/')} class:active={page.url.pathname === '/'} onclick={() => (open = false)}>
+			<LayoutDashboard size={18} strokeWidth={1.8} /><span>Visão geral</span>
+		</a>
+		<a
+			href={resolve('/users')}
+			class:active={page.url.pathname.startsWith('/users')}
+			onclick={() => (open = false)}
+		>
+			<Users size={18} strokeWidth={1.8} /><span>Usuários</span>
+		</a>
+		<a
+			href={resolve('/posts')}
+			class:active={page.url.pathname.startsWith('/posts')}
+			onclick={() => (open = false)}
+		>
+			<FileText size={18} strokeWidth={1.8} /><span>Publicações</span>
+		</a>
 	</nav>
 </aside>
 
@@ -97,14 +112,6 @@
 		background: #f0edff;
 		color: #6454dc;
 		font-weight: 650;
-	}
-	.nav-badge {
-		margin-left: auto;
-		padding: 3px 7px;
-		border-radius: 12px;
-		background: white;
-		color: #7770b6;
-		font-size: 10px;
 	}
 
 	.close,

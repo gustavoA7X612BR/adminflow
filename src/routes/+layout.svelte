@@ -1,10 +1,25 @@
 <script lang="ts">
+	import Breadcrumb from '$lib/components/Breadcrumb.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
+	import { resolve } from '$app/paths';
 	import { Bell, Menu } from 'lucide-svelte';
 	import type { LayoutProps } from './$types';
 	import { page } from '$app/state';
 	let { children }: LayoutProps = $props();
 	let menuOpen = $state(false);
+	let breadcrumbItems = $derived.by(() => {
+		const pathname = page.url.pathname;
+		const root = { label: 'Administração' };
+
+		if (pathname === '/') return [root, { label: 'Visão geral' }];
+		if (pathname === '/users') return [root, { label: 'Usuários' }];
+		if (pathname === '/posts') return [root, { label: 'Publicações' }];
+		if (/^\/posts\/\d+$/.test(pathname)) {
+			return [root, { label: 'Publicações', href: resolve('/posts') }, { label: 'Detalhes' }];
+		}
+
+		return [root, { label: 'Página não encontrada' }];
+	});
 </script>
 
 <svelte:head>
@@ -16,6 +31,7 @@
 		href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
 		rel="stylesheet"
 	/>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </svelte:head>
 
 <Sidebar bind:open={menuOpen} />
@@ -27,25 +43,7 @@
 			><span>admin<span>flow</span></span>
 		</div>
 
-		<div class="breadcrumbs">
-			<span>Administração</span>
-			<span class="slash">/</span>
-			<strong>
-				{#if page.url.pathname === '/'}
-					Visão geral
-				{:else if page.url.pathname === '/users'}
-					Usuários
-				{:else if page.url.pathname === '/posts'}
-					Publicações
-				{:else if /^\/posts\/\d+$/.test(page.url.pathname)}
-					<a href="/posts">Publicações</a>
-					<span class="slash">/</span>
-					Detalhes
-				{:else}
-					Página não encontrada
-				{/if}
-			</strong>
-		</div>
+		<Breadcrumb items={breadcrumbItems} />
 
 		<div class="top-actions">
 			<span class="today">Terça-feira, 28 de outubro de 2026</span><button
@@ -88,20 +86,6 @@
 		padding: 0 34px;
 		background: #fff;
 		border-bottom: 1px solid #edf0f4;
-	}
-	.breadcrumbs {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		color: #969eac;
-		font-size: 11px;
-	}
-	.breadcrumbs strong {
-		color: #3c4659;
-		font-weight: 600;
-	}
-	.slash {
-		color: #c4c9d2;
 	}
 	.top-actions {
 		display: flex;
@@ -160,7 +144,6 @@
 			height: 60px;
 			padding: 0 17px;
 		}
-		.breadcrumbs,
 		.today {
 			display: none;
 		}

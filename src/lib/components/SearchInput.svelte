@@ -1,7 +1,14 @@
 <script lang="ts">
+	/** Propriedades aceitas por {@link SearchInput}. */
 	interface Props {
+		/**
+		 * Texto da busca. Esta propriedade aceita binding, permitindo que o
+		 * componente pai leia e atualize o valor com `bind:value`.
+		 */
 		value: string;
+		/** Texto de orientação exibido enquanto o campo estiver vazio. */
 		placeholder?: string;
+		/** Nome acessível aplicado ao campo e ao rótulo visualmente oculto. */
 		label?: string;
 	}
 
