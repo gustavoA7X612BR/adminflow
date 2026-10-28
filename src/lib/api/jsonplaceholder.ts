@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'https://jsonplaceholder.typicode.com';
 
 export interface ApiUser {
 	id: number;
@@ -30,8 +30,8 @@ export interface ApiComment {
 	body: string;
 }
 
-export async function getUsers(): Promise<ApiUser[]> {
-	const response = await fetch(`${API_BASE_URL}/users`);
+export async function getUsers(fetcher: typeof fetch = fetch): Promise<ApiUser[]> {
+	const response = await fetcher(`${API_BASE_URL}/users`);
 
 	if (!response.ok) {
 		throw new Error(`Erro ao buscar usuários: ${response.status}`);
@@ -40,8 +40,8 @@ export async function getUsers(): Promise<ApiUser[]> {
 	return response.json() as Promise<ApiUser[]>;
 }
 
-export async function getPosts(): Promise<ApiPost[]> {
-	const response = await fetch(`${API_BASE_URL}/posts`);
+export async function getPosts(fetcher: typeof fetch = fetch): Promise<ApiPost[]> {
+	const response = await fetcher(`${API_BASE_URL}/posts`);
 
 	if (!response.ok) {
 		throw new Error(`Erro ao buscar posts: ${response.status}`);
@@ -50,8 +50,8 @@ export async function getPosts(): Promise<ApiPost[]> {
 	return response.json() as Promise<ApiPost[]>;
 }
 
-export async function getPost(id: number): Promise<ApiPost> {
-	const response = await fetch(`${API_BASE_URL}/posts/${id}`);
+export async function getPost(id: number, fetcher: typeof fetch = fetch): Promise<ApiPost> {
+	const response = await fetcher(`${API_BASE_URL}/posts/${id}`);
 
 	if (!response.ok) {
 		throw new Error(`Erro ao buscar post: ${response.status}`);
@@ -60,8 +60,11 @@ export async function getPost(id: number): Promise<ApiPost> {
 	return response.json() as Promise<ApiPost>;
 }
 
-export async function getComments(postId: number): Promise<ApiComment[]> {
-	const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`);
+export async function getComments(
+	postId: number,
+	fetcher: typeof fetch = fetch
+): Promise<ApiComment[]> {
+	const response = await fetcher(`${API_BASE_URL}/posts/${postId}/comments`);
 
 	if (!response.ok) {
 		throw new Error(`Erro ao buscar comentários: ${response.status}`);

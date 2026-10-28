@@ -29,7 +29,9 @@ const comments: ApiComment[] = [
 ];
 
 function loadPost(id: string) {
-	return load({ params: { id } } as Parameters<typeof load>[0]);
+	return load({ params: { id }, fetch: vi.fn<typeof fetch>() } as unknown as Parameters<
+		typeof load
+	>[0]);
 }
 
 describe('load da página de detalhe da publicação', () => {
@@ -50,8 +52,8 @@ describe('load da página de detalhe da publicação', () => {
 		mockGetComments.mockResolvedValue(comments);
 
 		await expect(loadPost('12')).resolves.toEqual({ post, comments });
-		expect(mockGetPost).toHaveBeenCalledWith(12);
-		expect(mockGetComments).toHaveBeenCalledWith(12);
+		expect(mockGetPost).toHaveBeenCalledWith(12, expect.any(Function));
+		expect(mockGetComments).toHaveBeenCalledWith(12, expect.any(Function));
 	});
 
 	it('retorna 404 quando a API não encontra a publicação', async () => {

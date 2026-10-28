@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import { getPost, getComments } from '$lib/api/jsonplaceholder';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async ({ params, fetch }) => {
 	const id = Number(params.id);
 
 	if (!Number.isInteger(id) || id < 1) {
@@ -10,13 +10,13 @@ export const load: PageLoad = async ({ params }) => {
 	}
 
 	try {
-		const post = await getPost(id);
+		const post = await getPost(id, fetch);
 
 		if (!post?.id) {
 			error(404, 'Publicação não encontrada');
 		}
 
-		const comments = await getComments(id);
+		const comments = await getComments(id, fetch);
 
 		return { post, comments };
 	} catch (err) {
